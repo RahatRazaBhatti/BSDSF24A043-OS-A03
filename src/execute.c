@@ -107,7 +107,7 @@ void reap_jobs(void) {
         }
     }
 }
-
+/* Display all background jobs */
 void show_jobs(void) {
     reap_jobs();
 
@@ -123,15 +123,20 @@ void show_jobs(void) {
     printf("\n");
 }
 
-int handle_builtin(char** args) {
 
-    if (!args || !args[0]) return 1;
+/* Handle built-in shell commands */
+int handle_builtin(char **args) {
 
+    if (!args || !args[0])
+        return 1;
+
+    /* Exit command */
     if (strcmp(args[0], "exit") == 0) {
         printf("Exiting shell...\n");
         exit(0);
     }
 
+    /* Change directory */
     if (strcmp(args[0], "cd") == 0) {
         if (!args[1])
             fprintf(stderr, "cd: directory required\n");
@@ -141,21 +146,31 @@ int handle_builtin(char** args) {
         return 1;
     }
 
+    /* Help command */
     if (strcmp(args[0], "help") == 0) {
-        printf("Built-ins: cd, exit, help, jobs, history, set\n");
+        printf("\nBuilt-in Commands:\n");
+        printf("  cd <dir>  - Change directory\n");
+        printf("  exit      - Exit the shell\n");
+        printf("  help      - Display available commands\n");
+        printf("  jobs      - Display background jobs\n");
+        printf("  history   - Display command history\n");
+        printf("  set       - Display shell variables\n");
         return 1;
     }
 
+    /* Display background jobs */
     if (strcmp(args[0], "jobs") == 0) {
         show_jobs();
         return 1;
     }
 
+    /* Display command history */
     if (strcmp(args[0], "history") == 0) {
         printf("Use Readline history.\n");
         return 1;
     }
 
+    /* Display shell variables */
     if (strcmp(args[0], "set") == 0) {
         show_variables();
         return 1;
@@ -163,7 +178,6 @@ int handle_builtin(char** args) {
 
     return 0;
 }
-
 static void run_command(char** args, int input_fd, int output_fd) {
 
     if (input_fd != STDIN_FILENO) {
